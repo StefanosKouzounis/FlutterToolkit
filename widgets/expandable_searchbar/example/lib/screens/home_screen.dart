@@ -70,14 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 50,
             contentColor: Colors.white,
             backgroundColor: Colors.blue,
-            width: MediaQuery.sizeOf(context).width / 2,
+            width: MediaQuery.sizeOf(context).width / 1.5,
             onSearch: () {
               setState(() {
                 searching = true;
               });
             },
             controller: searchController,
-            hintText: 'Search...',
+            hintText: 'Search in Groceries content...',
             onHide: () {
               searchController.clear();
             },
