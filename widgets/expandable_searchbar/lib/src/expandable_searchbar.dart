@@ -15,6 +15,7 @@ class ExpandableSearchbar extends StatefulWidget {
   final double fontSize;
   final void Function() onSearch;
   final void Function() onHide;
+  final bool enableLogicalKeyboardShorcuts;
 
   const ExpandableSearchbar({
     required this.contentColor,
@@ -30,6 +31,7 @@ class ExpandableSearchbar extends StatefulWidget {
     this.iconSize = 20.0,
     this.borderRadius = 30.0,
     this.fontSize = 13.0,
+    this.enableLogicalKeyboardShorcuts = true,
     super.key,
   });
 
@@ -64,23 +66,26 @@ class _ExpandableSearchbarState extends State<ExpandableSearchbar>
   Widget build(BuildContext context) {
     return CallbackShortcuts(
       bindings: <ShortcutActivator, VoidCallback>{
-        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () {
-          setState(() {
-            expanded = true;
-          });
-        },
-        const SingleActivator(LogicalKeyboardKey.enter, control: false): () {
-          if (expanded) {
-            widget.onSearch();
-          }
-        },
-        const SingleActivator(LogicalKeyboardKey.escape, control: false): () {
-          setState(() {
+        if (widget.enableLogicalKeyboardShorcuts)
+          const SingleActivator(LogicalKeyboardKey.keyS, control: true): () {
             setState(() {
-              expanded = false;
+              expanded = true;
             });
-          });
-        },
+          },
+        if (widget.enableLogicalKeyboardShorcuts)
+          const SingleActivator(LogicalKeyboardKey.enter, control: false): () {
+            if (expanded) {
+              widget.onSearch();
+            }
+          },
+        if (widget.enableLogicalKeyboardShorcuts)
+          const SingleActivator(LogicalKeyboardKey.escape, control: false): () {
+            setState(() {
+              setState(() {
+                expanded = false;
+              });
+            });
+          },
       },
       child: Material(
         borderRadius: BorderRadius.circular(widget.borderRadius),
