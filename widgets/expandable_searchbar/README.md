@@ -25,7 +25,7 @@
 Simple usage:
 </td>
 <td>
-<img  src="../gifs/search_in_action.gif"  alt="">
+<img  src="./gifs/search_in_action.gif"  alt="">
 </td>
 </tr>
 </table>
