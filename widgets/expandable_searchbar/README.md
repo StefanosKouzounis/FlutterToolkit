@@ -2,12 +2,13 @@
 
 ### Example Code
 ```dart
-ExpandableSearchbar(
+ ExpandableSearchbar(
             curve: Curves.linear,
-            animationDurationInMilli: 500,
-            contentColor: Colors.black,
-            backgroundColor: Colors.white,
-            width: 300,
+            animationDuration: 500,
+            height: 50,
+            contentColor: Colors.white,
+            backgroundColor: Colors.blue,
+            width: MediaQuery.sizeOf(context).width / 2,
             onSearch: () {
               setState(() {
                 searching = true;
@@ -16,12 +17,15 @@ ExpandableSearchbar(
             controller: searchController,
             hintText: 'Search...',
             onHide: () {
-                searchController.clear();
+              searchController.clear();
             },
           ),
 ```
 
-
-| Simple use ||
-|:-------------:|:-------------:|
-| ![Made with ScreenToGif](./gifs/search_in_action.gif) ||
+Simple usage:
+</td>
+<td>
+<img  src="../gifs/search_in_action.gif"  alt="">
+</td>
+</tr>
+</table>
