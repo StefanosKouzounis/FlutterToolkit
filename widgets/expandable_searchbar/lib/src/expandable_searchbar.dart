@@ -28,7 +28,7 @@ class ExpandableSearchbar extends StatefulWidget {
     this.height = 45,
     this.animationDuration = 250,
     this.curve = Curves.easeOut,
-    this.iconSize = 20.0,
+    this.iconSize = 28.0,
     this.borderRadius = 30.0,
     this.fontSize = 13.0,
     this.enableLogicalKeyboardShorcuts = true,
