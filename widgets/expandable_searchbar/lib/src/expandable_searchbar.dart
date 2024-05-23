@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ExpandableSearchbar extends StatefulWidget {
   final Color contentColor;
@@ -61,118 +62,142 @@ class _ExpandableSearchbarState extends State<ExpandableSearchbar>
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: BorderRadius.circular(widget.borderRadius),
-      color: widget.backgroundColor,
-      elevation: expanded ? 5 : 0,
-      child: Container(
-        height: expanded ? widget.height : widget.iconSize * 2,
-        alignment: Alignment.center,
-        child: AnimatedContainer(
-          decoration: BoxDecoration(
-              color: expanded ? widget.backgroundColor : Colors.transparent,
-              borderRadius: BorderRadius.circular(widget.borderRadius)),
-          width: expanded ? widget.width : widget.iconSize * 2,
-          duration: Duration(milliseconds: widget.animationDuration),
-          curve: widget.curve,
-          child: Stack(
-            children: [
-              AnimatedPositioned(
-                duration: Duration(milliseconds: widget.animationDuration),
-                curve: widget.curve,
-                right: 0,
-                child: AnimatedOpacity(
+    return CallbackShortcuts(
+      bindings: <ShortcutActivator, VoidCallback>{
+        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () {
+          setState(() {
+            expanded = true;
+          });
+        },
+        const SingleActivator(LogicalKeyboardKey.enter, control: false): () {
+          if (expanded) {
+            widget.onSearch();
+          }
+        },
+        const SingleActivator(LogicalKeyboardKey.escape, control: false): () {
+          setState(() {
+            setState(() {
+              expanded = false;
+            });
+          });
+        },
+      },
+      child: Material(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        color: widget.backgroundColor,
+        elevation: expanded ? 5 : 0,
+        child: Container(
+          height: expanded ? widget.height : widget.iconSize * 2,
+          alignment: Alignment.center,
+          child: AnimatedContainer(
+            decoration: BoxDecoration(
+                color: expanded ? widget.backgroundColor : Colors.transparent,
+                borderRadius: BorderRadius.circular(widget.borderRadius)),
+            width: expanded ? widget.width : widget.iconSize * 2,
+            duration: Duration(milliseconds: widget.animationDuration),
+            curve: widget.curve,
+            child: Stack(
+              children: [
+                AnimatedPositioned(
                   duration: Duration(milliseconds: widget.animationDuration),
-                  opacity: expanded ? 1.0 : 0.0,
-                  child: AnimatedContainer(
+                  curve: widget.curve,
+                  right: 0,
+                  child: AnimatedOpacity(
                     duration: Duration(milliseconds: widget.animationDuration),
-                    curve: widget.curve,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        unfocus();
-                        animationController.reverse();
-                        widget.controller.clear();
-                        setState(() {
-                          expanded = false;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        size: expanded ? widget.iconSize * 0.8 : 0,
-                        color: widget.contentColor,
+                    opacity: expanded ? 1.0 : 0.0,
+                    child: AnimatedContainer(
+                      duration:
+                          Duration(milliseconds: widget.animationDuration),
+                      curve: widget.curve,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          unfocus();
+                          animationController.reverse();
+                          setState(() {
+                            expanded = false;
+                          });
+                          widget.onHide();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: expanded ? widget.iconSize * 0.8 : 0,
+                          color: widget.contentColor,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              AnimatedPositioned(
-                bottom: 0,
-                top: 0,
-                left: expanded ? widget.iconSize * 2.2 : widget.iconSize,
-                duration: Duration(milliseconds: widget.animationDuration),
-                curve: widget.curve,
-                child: AnimatedOpacity(
+                AnimatedPositioned(
+                  bottom: 0,
+                  top: 0,
+                  left: expanded ? widget.iconSize * 2.2 : widget.iconSize,
                   duration: Duration(milliseconds: widget.animationDuration),
-                  opacity: expanded ? 1.0 : 0.0,
-                  child: AnimatedContainer(
-                    width: widget.width - (widget.iconSize * 4),
+                  curve: widget.curve,
+                  child: AnimatedOpacity(
                     duration: Duration(milliseconds: widget.animationDuration),
-                    curve: widget.curve,
-                    child: TextField(
-                      textInputAction: TextInputAction.search,
-                      controller: widget.controller,
-                      focusNode: focusNode,
-                      cursorRadius: const Radius.circular(30.0),
-                      cursorWidth: 2.0,
-                      cursorColor: widget.contentColor,
-                      onSubmitted: (value) {
-                        widget.onSearch();
-                      },
-                      onEditingComplete: () {
-                        widget.onSearch();
-                      },
-                      style: TextStyle(
-                        color: widget.contentColor,
-                        fontSize: widget.fontSize,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(bottom: 5),
-                        isDense: true,
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        labelText: widget.hintText,
-                        labelStyle: TextStyle(
+                    opacity: expanded ? 1.0 : 0.0,
+                    child: AnimatedContainer(
+                      width: widget.width - (widget.iconSize * 4),
+                      duration:
+                          Duration(milliseconds: widget.animationDuration),
+                      curve: widget.curve,
+                      child: TextField(
+                        textInputAction: TextInputAction.search,
+                        controller: widget.controller,
+                        focusNode: focusNode,
+                        cursorRadius: const Radius.circular(30.0),
+                        cursorWidth: 2.0,
+                        cursorColor: widget.contentColor,
+                        onSubmitted: (value) {
+                          widget.onSearch();
+                        },
+                        onEditingComplete: () {
+                          widget.onSearch();
+                        },
+                        style: TextStyle(
                           color: widget.contentColor,
                           fontSize: widget.fontSize,
-                          fontWeight: FontWeight.w500,
                         ),
-                        alignLabelWithHint: true,
-                        border: InputBorder.none,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.only(bottom: 5),
+                          isDense: true,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: widget.hintText,
+                          labelStyle: TextStyle(
+                            color: widget.contentColor,
+                            fontSize: widget.fontSize,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          alignLabelWithHint: true,
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Material(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-                color: widget.backgroundColor,
-                child: IconButton(
-                  onPressed: () {
-                    if (!expanded) {
-                      setState(() {
-                        expanded = true;
-                        animationController.forward();
-                      });
-                    }
-                  },
-                  icon: Icon(
-                    Icons.search,
-                    size: expanded ? widget.iconSize * 0.8 : widget.iconSize,
-                    color: widget.contentColor,
+                Material(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  color: widget.backgroundColor,
+                  child: IconButton(
+                    onPressed: () {
+                      if (!expanded) {
+                        setState(() {
+                          expanded = true;
+                          animationController.forward();
+                        });
+                      }
+                      widget.onSearch();
+                    },
+                    icon: Icon(
+                      Icons.search,
+                      size: expanded ? widget.iconSize * 0.8 : widget.iconSize,
+                      color: widget.contentColor,
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
