@@ -77,9 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
             controller: searchController,
-            hintText: 'Search in Groceries content...',
+            hintText: 'Search in Groceries..',
             onHide: () {
-              searchController.clear();
+              setState(() {
+                searchController.clear();
+                searching = false;
+              });
             },
           ),
         ],

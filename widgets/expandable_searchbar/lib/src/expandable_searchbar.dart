@@ -80,10 +80,9 @@ class _ExpandableSearchbarState extends State<ExpandableSearchbar>
           },
         if (widget.enableLogicalKeyboardShorcuts)
           const SingleActivator(LogicalKeyboardKey.escape, control: false): () {
+            widget.onHide();
             setState(() {
-              setState(() {
-                expanded = false;
-              });
+              expanded = false;
             });
           },
       },
